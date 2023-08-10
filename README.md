@@ -1,3 +1,7 @@
+# 접속 주소: https://bit.ly/pycon-2023-fastapi
+
+---
+
 # 1. FastAPI 기초 핸즈온
 
 - 첫 시간에는 FastAPI에 대해 기초적인 내용을 살펴보고 간단한 API 엔드포인트를 만들어 봅니다.
@@ -186,6 +190,7 @@ FastAPI가 자동으로 만들어주는 문서 http://localhost:8000/docs
 
 ![ ](./assets/images/fastapi-docs.png)
 
+---
 
 # 2. FastAPI의 데이터 검증 feat. Pydantic
 
@@ -385,6 +390,8 @@ def add(
 ```
 </details>
 
+---
+
 # 3. FastAPI의 데이터 검증 #2 feat. Pydantic의 `BaseModel``
 
 - 셋째 시간에는 Pydantic의 `BaseModel`을 활용한 데이터 검증 기능을 다룹니다.
@@ -544,6 +551,7 @@ async def create_sheet(sheet: IdSheet) -> dict:
 
 - 브라우저에서 http://127.0.0.1:8001/docs 의 Responses 201 부분이 어떻게 바뀌었는지 확인하기
 
+---
 
 # 4. FastAPI의 비동기 경험하기
 
