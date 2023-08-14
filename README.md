@@ -118,8 +118,22 @@ $ poetry run uvicorn api.api:app --reload
 - 브라우저에서 http://localhost:8000/add?x=1&y=2 확인하기
 
 ```json
-{"result": 3}
+{"result": 12}
 ```
+
+#### 실습: `result` 고치기
+
+(FastAPI를 모르는 경우를 가정하고) 파이썬에서 문자열을 숫자로 형변환하는 방법을 사용해보세요.
+
+<details>
+<summary>답</summary>
+
+```python
+@app.get("/add")
+def add(x, y):
+    return {"result": int(x) + int(y)}
+```
+</details>
 
 #### 실습: multiply API 만들어보기
 
@@ -137,7 +151,7 @@ def multiply(...):
 ```python
 @app.get("/multiply")
 def multiply(x, y):
-    return {"result": x * y}
+    return {"result": int(x) * int(y)}
 ```
 
 - 작동 확인 http://localhost:8000/multiply?x=1&y=2
@@ -169,7 +183,7 @@ def hello(name):
 ```python
 @app.get("/multiply/{x}/{y}")
 def multiply(x, y):
-    return {"result": x * y}
+    return {"result": int(x) * int(y)}
 ```
 
 - 작동 확인 http://localhost:8000/multiply/1/2
@@ -200,10 +214,12 @@ FastAPI가 자동으로 만들어주는 문서 http://localhost:8000/docs
 
 ## 타입 힌트 추가하기
 
-#### 파이썬의 타입 힌팅
+#### 간단히 알아보는 파이썬의 타입 힌팅
 
 ```python
 name: str = 'pycon'  # 변수에 타입 힌트 추가 (타입 강제가 아님에 유의!)
+
+some_value: int | str  # int형이나 str형이 될 수 있음을 표시
 
 def hello(name: str = 'default name') -> dict:  # 함수의 인자와 리턴값에 타입 힌트 추가
     return {'result': f'Hello {name}'}
@@ -220,6 +236,8 @@ def add(x: int, y: int) -> dict:
 def multiply(x: int, y: int) -> dict:
     return {"result": x * y}
 ```
+
+- 형변환 부분을 제거했지만 `x`와 `y`를 `int` 형으로 인식합니다.
 
 ## FastAPI의 자동화된 오류 코드
 
@@ -286,7 +304,7 @@ from typing import Optional
 def hello(name: str, nickname: str = None) -> dict:
     if nickname:
         return {"message": f"Hello {name} ({nickname})"}
-    
+
     return {"message": f"Hello {name}"}
 ```
 
@@ -312,7 +330,7 @@ def hello(name: str, nickname: str | None) -> dict:
 즉, `nickname`은 반드시 입력해야만 하는 필수 인자가 됩니다.
 </details>
 
-#### hello API의 nickname 인자에 복잡한 제한 추가하기
+#### `hello` API의 `nickname` 인자에 복잡한 제한 추가하기
 
 ```python
 # 파일 상단에 추가
@@ -392,7 +410,7 @@ def add(
 
 ---
 
-# 3. FastAPI의 데이터 검증 #2 feat. Pydantic의 `BaseModel``
+# 3. FastAPI의 데이터 검증 #2 feat. Pydantic의 `BaseModel`
 
 - 셋째 시간에는 Pydantic의 `BaseModel`을 활용한 데이터 검증 기능을 다룹니다.
 - (부록으로 응답 코드와 응답 데이터 형태를 변경하는 방법도 다룹니다.)
@@ -482,13 +500,13 @@ def create_sheet(sheet: IdSheet) -> dict:
     return {"message": "created"}
 ```
 
-#### `filename`` 길이 제한하기
+#### `filename` 길이 제한하기
 
 ```python
 from pydantic import Field
 
 class IdSheet(BaseModel):
-    filename: Field(str, min_length=1, max_length=10)
+    filename: str = Field(min_length=1, max_length=10)
     ids: list[int]
 ```
 
@@ -549,7 +567,7 @@ async def create_sheet(sheet: IdSheet) -> dict:
     ...
 ```
 
-- 브라우저에서 http://127.0.0.1:8001/docs 의 Responses 201 부분이 어떻게 바뀌었는지 확인하기
+- 브라우저에서 http://127.0.0.1:8001/docs 의 Responses 부분이 어떻게 바뀌었는지 확인하기
 
 ---
 
